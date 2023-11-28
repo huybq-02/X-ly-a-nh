@@ -1,0 +1,30 @@
+import numpy as np
+
+input()
+n_se = int(input())
+se, image = [], []
+for _ in range(n_se):
+    se.append(list(map(int, input().split())))
+n = int(input())
+for _ in range(n):
+    image.append(list(map(int, input().split())))
+se = np.array(se)
+image = np.array(image)
+
+result = np.zeros_like(image)
+def equal(arr1, arr2):
+    for i in range(len(arr1)):
+        for j in range(len(arr1)):
+            if arr1[i][j] == 1:
+                if arr2[i][j] != 1:
+                    return False
+    return True 
+for i in range(n):
+    for j in range(n):
+        if i+n_se <= n and j+n_se <= n:
+            sub_matrix = image[i:i+n_se, j:j+n_se]
+            if equal(se, sub_matrix):
+                result[i+n_se//2][j+n_se//2] = 1
+
+for row in result:
+    print(*row)
