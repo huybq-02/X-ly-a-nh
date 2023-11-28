@@ -1,0 +1,31 @@
+import numpy as np
+
+input()
+n_se = int(input())
+se, image = [], []
+for _ in range(n_se):
+    se.append(list(map(int, input().split())))
+n = int(input())
+for _ in range(n):
+    image.append(list(map(int, input().split())))
+se = np.array(se)
+image = np.array(image)
+
+result = np.copy(image)
+
+
+def check_hits(arr1, arr2):
+    return np.any(np.logical_and(arr1, arr2))
+
+
+expand_image = np.pad(image, ((n_se//2, n_se//2),
+                      (n_se//2, n_se//2)), mode='constant', constant_values=0)
+
+for i in range(n_se//2, n_se//2 + n):
+    for j in range(n_se//2, n_se//2 + n):
+        sub_matrix = expand_image[i-n_se//2:i+n_se//2+1, j-n_se//2:j+n_se//2+1]
+        if check_hits(se, sub_matrix):
+            result[i-n_se//2][j-n_se//2] = 1
+
+for row in result:
+    print(*row)
