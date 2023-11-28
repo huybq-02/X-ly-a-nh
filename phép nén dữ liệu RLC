@@ -1,0 +1,31 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+string runLengthEncoding(string data) {
+    string encodedData = "";
+    int count = 1;
+
+    for (int i = 1; i < data.length(); i++) {
+        if (data[i] == data[i - 1]) {
+            count++;
+        } else {
+            encodedData += data[i - 1] + to_string(count);
+            count = 1;
+        }
+    }
+
+    encodedData += data[data.length() - 1] + to_string(count);
+
+    return encodedData;
+}
+
+int main() {
+    string input_data;
+    cin >> input_data;
+
+    string encoded_data = runLengthEncoding(input_data);
+    cout<< encoded_data;
+
+    return 0;
+}
