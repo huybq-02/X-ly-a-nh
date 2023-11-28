@@ -1,0 +1,66 @@
+#include<iostream>
+#include<set>
+#include<vector>
+
+using namespace std;
+
+int main() {
+    int n;
+    cin >> n;
+    int a[101][101];
+    int ni[100000];
+
+    // thêm số vào set -> tự động sắp xếp + lọc các số có trong ma trận
+    set<int> s;
+    for(int i = 0; i < n; i++) {
+        for(int j = 0; j < n; j++) {
+            cin >> a[i][j];
+            ni[a[i][j]]++;
+            s.insert(a[i][j]);
+        }
+    }
+    // tính mn = số pixel của ma trận
+    int mn = n*n;
+    double mg = 0;
+    float p[100000];
+    vector<int> t;
+    for(int i : s) {
+        // tính xác suất của từng số
+        p[i] = (double) ni[i] / mn;
+        // tính mg
+        mg = mg + i * p[i];
+        // thêm số vào vector
+        t.push_back(i);
+    }
+    float p1[100000], m[100000];
+    for(int i = 0; i < t.size(); i++) {
+        // tính xác suất tích lũy
+        p1[i] = p1[i-1] + p[t[i]];
+        // tính trung bình tích lũy
+        m[i] = m[i-1] + t[i] * p[t[i]];
+    }
+
+    float o[100000];
+    float biggest_o = 0;
+    int otsu_threshold = 0;
+    for(int i = 0; i < t.size(); i++) {
+        // tính phương sai
+        if(i == t.size() - 1) {
+            o[i] = 0;
+            if(o[i] > biggest_o) {
+                biggest_o = o[i];
+                otsu_threshold = t[i];
+            }
+            
+        } else {
+            o[i] = (mg * p1[i] - m[i]) * (mg * p1[i] - m[i]) / (p1[i] * (1 - p1[i]));
+            if(o[i] > biggest_o) {
+                biggest_o = o[i];
+                otsu_threshold = t[i];
+            }
+        }
+        // bỏ cmt dòng dưới nếu muốn tính phương sai từng cái một
+        // cout << t[i] << " " << o[i] << endl;
+    }
+    cout << "Otsu threshold = " << otsu_threshold << endl;
+}
